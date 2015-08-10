@@ -1,0 +1,22 @@
+{
+    "author": {
+        "name": "Yigit Ozen"
+    },
+    "description": "Find colors",
+    "name": "colorfinder.js",
+    "version": "0.0.1",
+    "private": true,
+    "main": "./findcolors.js",
+    "engines": {
+        "node": "0.10.x",
+        "npm": "1.3.x"
+    },
+    "dependencies": {
+        "commander": "~2.8.1",
+        "delta-e": "~0.0.7",
+        "fs-extra": "~0.23.1",
+        "lodash": "~3.10.1",
+        "node-vibrant": "~1.1.2",
+        "request": "~2.60.0"
+    }
+}
