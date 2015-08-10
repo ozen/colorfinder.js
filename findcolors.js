@@ -8,7 +8,8 @@ var loda = require('lodash');
 var request = require('request');
 var Vibrant = require('node-vibrant');
 var DeltaE = require('delta-e');
-var palette = JSON.parse(fs.readFileSync('palette.json', 'utf8'));
+var palette = JSON.parse(fs.readFileSync(path.join(__dirname, 'palette.json'),
+    'utf8'));
 
 program
     .version('0.0.1')
