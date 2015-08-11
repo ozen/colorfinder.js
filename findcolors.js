@@ -9,6 +9,8 @@ var DeltaE = require('delta-e');
 var palette = JSON.parse(fs.readFileSync(path.join(__dirname, 'palette.json'),
     'utf8'));
 
+var DELTAE_THRESHOLD = 10.0;
+
 program
     .version('0.0.1')
     .option('-p, --path <path>', 'Image path')
@@ -32,13 +34,16 @@ function findColors() {
     v.getSwatches(function(err, swatches) {
         if (err) {
             console.log("Got error: " + err.message);
-            process.exit();
+            process.exit(1);
         }
 
         var tags = [];
         lodash.forEach(swatches, function(swatch) {
             if (swatch) {
-                tags.push(findClosestColor(swatch['rgb']));
+                closestColor = findClosestColor(swatch['rgb']);
+                if (DELTAE_THRESHOLD) {
+                    tags.push(closestColor);
+                }
             }
         });
 
