@@ -1,10 +1,8 @@
 var os = require('os');
-var http = require('http');
-var https = require('https');
 var fs = require('fs-extra')
 var path = require('path');
 var program = require('commander');
-var loda = require('lodash');
+var lodash = require('lodash');
 var request = require('request');
 var Vibrant = require('node-vibrant');
 var DeltaE = require('delta-e');
@@ -17,11 +15,10 @@ program
     .parse(process.argv);
 
 var filePath;
-var ishttp = loda.startsWith(program.path, 'http://');
-var ishttps = loda.startsWith(program.path, 'https://')
+var pathIsURL = lodash.startsWith(program.path, 'http');
 
-if (ishttp || ishttps) {
-    filePath = path.join(os.tmpDir(), 'imcom-vibrant', (new Date()).getTime().toString())
+if (pathIsURL) {
+    filePath = path.join(os.tmpDir(), 'colorfinderjs', (new Date()).getTime().toString())
     request(program.path).pipe(fs.createOutputStream(filePath)).on('close',
         findColors);
 } else {
@@ -39,16 +36,18 @@ function findColors() {
         }
 
         var tags = [];
-        loda.forEach(swatches, function(swatch) {
+        lodash.forEach(swatches, function(swatch) {
             if (swatch) {
                 tags.push(findClosestColor(swatch['rgb']));
             }
         });
 
-        tags = loda.unique(tags);
+        tags = lodash.unique(tags);
 
-        if (loda.startsWith(program.path, 'http')) {
-            fs.unlinkSync(filePath);
+        if (pathIsURL) {
+            try {
+                fs.removeSync(filePath);
+            } catch (e) {}
         }
 
         console.log(tags.join(','));
@@ -60,7 +59,7 @@ function findClosestColor(rgb) {
     var minDiff = Number.MAX_VALUE;
     var label;
 
-    loda.forEach(palette, function(color) {
+    lodash.forEach(palette, function(color) {
         var diff = DeltaE.getDeltaE00(labArr2obj(color['lab']),
             labArr2obj(lab));
         if (diff < minDiff) {
