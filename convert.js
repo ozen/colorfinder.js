@@ -120,6 +120,7 @@ exports.lab2rgb = function lab2rgb(lab) {
 
 exports.rgb2hex = function rgb2hex(rgb) {
     function component2hex(c) {
+        c = parseInt(c);
         var hex = c.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
     }
