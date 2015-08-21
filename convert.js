@@ -129,6 +129,10 @@ exports.rgb2hex = function rgb2hex(rgb) {
             rgb[2]);
 }
 
+exports.lab2hex = function lab2hex(lab) {
+    return rgb2hex(lab2rgb(lab));
+}
+
 if (!module.parent) {
     program
         .version('0.0.1')
