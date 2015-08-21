@@ -130,7 +130,7 @@ exports.rgb2hex = function rgb2hex(rgb) {
 }
 
 exports.lab2hex = function lab2hex(lab) {
-    return rgb2hex(lab2rgb(lab));
+    return this.rgb2hex(this.lab2rgb(lab));
 }
 
 if (!module.parent) {
