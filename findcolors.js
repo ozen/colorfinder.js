@@ -14,6 +14,7 @@ var DELTAE_THRESHOLD = 10.0;
 program
     .version('0.0.1')
     .option('-p, --path <path>', 'Image path')
+    .option('-l, --lab', 'Print Lab values')
     .parse(process.argv);
 
 var filePath;
@@ -37,29 +38,48 @@ function findColors() {
             process.exit(1);
         }
 
-        var tags = [];
-        lodash.forEach(swatches, function(swatch) {
-            if (swatch) {
-                closestColor = findClosestColor(swatch['rgb']);
-                if (DELTAE_THRESHOLD) {
-                    tags.push(closestColor);
-                }
-            }
-        });
-
-        tags = lodash.unique(tags);
+        if (program.lab) {
+            findColorLabs(swatches);
+        } else {
+            findColorTags(swatches);
+        }
 
         if (pathIsURL) {
             try {
                 fs.removeSync(filePath);
             } catch (e) {}
         }
-
-        console.log(tags.join(','));
     });
 }
 
-function findClosestColor(rgb) {
+function findColorLabs(swatches) {
+    var labs = [];
+    lodash.forEach(swatches, function(swatch) {
+        if (swatch) {
+            var lab = rgb2lab(swatch['rgb']);
+            labs.push(lab.join(','));
+        }
+    });
+    console.log(labs.join('\n'));
+}
+
+function findColorTags(swatches) {
+    var tags = [];
+    lodash.forEach(swatches, function(swatch) {
+        if (swatch) {
+            closestColor = findClosestColorLabel(swatch[
+                'rgb']);
+            if (DELTAE_THRESHOLD) {
+                tags.push(closestColor);
+            }
+        }
+    });
+
+    tags = lodash.unique(tags);
+    console.log(tags.join(','));
+}
+
+function findClosestColorLabel(rgb) {
     var lab = rgb2lab(rgb);
     var minDiff = Number.MAX_VALUE;
     var label;
